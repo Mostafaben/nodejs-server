@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { STATUS } from '../../enum/enum';
-import UserModel from '../../models/user';
 import { handleHttpError } from '../../utils/HttpResponseHandler';
+import UserModel from '../../models/user';
 const pageElements: number = 10;
 const router = Router();
 
@@ -30,20 +29,20 @@ router.get('/', async (req, res) => {
 
 /**
  *
- * archive user ;
+ * update user status
  *
  */
-router.delete('/:id', async (req, res) => {
+router.patch('/:id/:status', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id, status } = req.params;
     const user: any = await UserModel.findById(id).exec();
     if (!user)
       return handleHttpError(new Error('user was not found'), res, 404);
-    user.status = STATUS.ARCHIVED;
+    user.status = status;
     await user.save();
     res.status(200).send({
       data: {
-        message: 'user was archived successfully ',
+        message: 'user was updated successfully',
       },
     });
   } catch (error) {
