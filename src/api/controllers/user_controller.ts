@@ -6,6 +6,7 @@ import UserModel from '../../models/user';
 import path from 'path';
 import fs from 'fs';
 import { userImageRoute } from '../../config/enviroment';
+import { validateRequest } from '../../utils/validations';
 const uploadPath = './../../uploads/users/';
 
 const router = Router();
@@ -55,14 +56,7 @@ router.patch(
   updateInformationsValidation,
   async (req: any, res: Response) => {
     try {
-      const errors = validationResult(req);
-      if (errors)
-        return res.status(400).send({
-          data: {
-            success: false,
-            errors,
-          },
-        });
+      validateRequest(validationResult(req), res);
 
       const { _id } = req.user;
       const { fullName } = req.body;
