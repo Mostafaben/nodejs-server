@@ -11,6 +11,7 @@ router.get('/', async (req, res) => {
     const count = await UserModel.find({}).countDocuments();
     const pages = Math.floor(count / pageElements);
     const users = await UserModel.find({})
+      .select('-password')
       .limit(pageElements)
       .skip(pageElements * Number(page))
       .exec();

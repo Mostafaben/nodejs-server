@@ -1,21 +1,20 @@
+import * as bcrypt from 'bcrypt';
 import express, { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import IPayload from '../../interfaces/payload';
 import UserModel from '../../models/user';
 import { handleHttpError } from '../../utils/HttpResponseHandler';
-import * as bcrypt from 'bcrypt';
-import { ROLE } from '../../enum/enum';
-import IPayload from '../../interfaces/payload';
 import {
   generateRefreshToken,
   generateToken,
 } from '../../utils/tokens_handlers';
+import { validateRequest } from '../../utils/validations';
 import {
   authenticateUser,
   loginValidation,
   refreshTokenValidation,
   registerValidation,
 } from '../middlewars/authentication';
-import { validateRequest } from '../../utils/validations';
 
 const router = express.Router();
 
