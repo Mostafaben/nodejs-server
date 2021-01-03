@@ -1,9 +1,10 @@
-import express, { Response } from 'express';
-import { port, dbPort, dbName, dbHost } from './src/config/enviroment';
-import formData from 'express-form-data';
-import Router from './src/api/router';
-import mongoose from 'mongoose';
 import cors from 'cors';
+import express, { Response } from 'express';
+import formData from 'express-form-data';
+import mongoose from 'mongoose';
+import Router from './src/api/router';
+import { dbHost, dbName, dbPort, port } from './src/config/enviroment';
+import setupServer from './src/utils/setup';
 
 const app = express(); // create new instance of express
 
@@ -35,6 +36,7 @@ const db = mongoose
      * start server if only connected to database
      */
     app.listen(port, () => {
+      setupServer();
       console.log(`listening on port ${port}`);
     });
   })
