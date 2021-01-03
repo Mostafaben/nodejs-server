@@ -17,17 +17,23 @@ router.post('/profile-picture', async (req: Request | any, res: Response) => {
   try {
     const { image } = req.files;
     const { _id } = req.user;
+
+    // check if the file sent is an image
     if (!isImage(image.path))
       return handleHttpError(new Error('must be an image'), res, 400);
+
     const user: any = await UserModel.findById(_id).exec();
-    const imageName = `user-${_id}`;
+    const extName = path.extname(image.path);
+    const imageName = `user-${_id}${extName}`;
     const imagePath = path.join(__dirname, uploadPath + imageName);
+
     fs.renameSync(image.path, imagePath);
     user.profileImage = {
       imageName,
       imagePath,
     };
     await user.save();
+
     res.status(200).send({
       data: {
         imageUrl: userImageRoute + imageName,
