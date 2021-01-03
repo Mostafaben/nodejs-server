@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
-import { ROLE } from '../enum/enum';
+import { ROLE, STATUS } from '../enum/enum';
 const email = require('mongoose-type-email');
 
 const UserShema = new Schema(
@@ -30,6 +30,10 @@ const UserShema = new Schema(
         imageName: { type: String, required: true },
         imagePath: { type: String, required: true },
       },
+    },
+    status: {
+      type: Number,
+      default: STATUS.ACTIVE,
     },
   },
   { timestamps: true }

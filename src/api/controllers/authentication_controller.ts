@@ -10,6 +10,7 @@ import {
   generateToken,
 } from '../../utils/tokens_handlers';
 import {
+  authenticateUser,
   loginValidation,
   refreshTokenValidation,
   registerValidation,
@@ -92,7 +93,9 @@ router.post('/refresh-token', refreshTokenValidation, (req, res) => {
     const user: any = UserModel.findOne({ refreshToken }).exec();
     if (!user)
       return handleHttpError(new Error('non valid refresh token'), res, 404);
-    const accessToken = generateToken({ _id: user._id, role: ROLE.USER });
+
+    const accessToken = generateToken({ _id: user._id, role: user.role });
+
     res.status(200).send({
       data: {
         accessToken,
@@ -103,7 +106,7 @@ router.post('/refresh-token', refreshTokenValidation, (req, res) => {
   }
 });
 
-router.get('/logout', async (req: any, res: Response) => {
+router.get('/logout', authenticateUser, async (req: any, res: Response) => {
   try {
     const { _id } = req.user;
 
