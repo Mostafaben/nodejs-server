@@ -105,6 +105,11 @@ router.post('/refresh-token', refreshTokenValidation, (req, res) => {
   }
 });
 
+/**
+ * @description
+ * to logout you need to be logged in in this case the user has to be authenticated first
+ *
+ */
 router.get('/logout', authenticateUser, async (req: any, res: Response) => {
   try {
     const { _id } = req.user;
