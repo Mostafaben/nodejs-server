@@ -1,10 +1,10 @@
-import { Router } from 'express';
-import { handleHttpError } from '../../utils/HttpResponseHandler';
+import { Request, Response, Router } from 'express';
 import UserModel from '../../models/user';
+import { handleHttpError } from '../../utils/HttpResponseHandler';
 const pageElements: number = 10;
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
     const count = await UserModel.find({}).countDocuments();
@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
  * update user status
  *
  */
-router.patch('/:id/:status', async (req, res) => {
+router.patch('/:id/:status', async (req: Request, res: Response) => {
   try {
     const { id, status } = req.params;
     const user: any = await UserModel.findById(id).exec();
