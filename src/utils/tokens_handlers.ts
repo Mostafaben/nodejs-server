@@ -1,14 +1,14 @@
-import { refreshTokenSecret, tokenSecret } from '../config/enviroment';
+import {
+  refreshTokenSecret,
+  tokenDuration,
+  tokenSecret,
+} from '../config/enviroment';
 import IPayload from '../interfaces/payload';
 import jwt from 'jsonwebtoken';
 
 export function generateToken(user: IPayload): string {
-  const token = jwt.sign(user, tokenSecret, { expiresIn: '3600s' });
-  return token;
+  return jwt.sign(user, tokenSecret, { expiresIn: `${tokenDuration}s` });
 }
-export function generateRefreshToken(user: any): string {
-  const refreshToken = jwt.sign(user, refreshTokenSecret, {
-    expiresIn: '3600s',
-  });
-  return refreshToken;
+export function generateRefreshToken(user: IPayload): string {
+  return jwt.sign(user, refreshTokenSecret);
 }

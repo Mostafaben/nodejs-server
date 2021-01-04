@@ -30,12 +30,18 @@ const db = mongoose
   .connect(`mongodb://${dbHost}:${dbPort}/${dbName}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => {
     /**
      * start server if only connected to database
      */
     app.listen(port, () => {
+      /**
+       * if server is running than setup the server
+       * create admin if not exist
+       * create regions if does not exist
+       */
       setupServer();
       console.log(`listening on port ${port}`);
     });

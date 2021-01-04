@@ -47,6 +47,8 @@ router.post('/profile-picture', async (req: Request | any, res: Response) => {
 
 /**
  * update user informations
+ * @todo
+ * add your costum fields
  */
 
 const updateInformationsValidation = [body('fullName').notEmpty().isAlpha()];
@@ -57,12 +59,11 @@ router.patch(
   async (req: any, res: Response) => {
     try {
       validateRequest(validationResult(req), res);
-
       const { _id } = req.user;
       const { fullName } = req.body;
-      const user: any = await UserModel.findById(_id).exec();
-      user.fullName = fullName;
-      await user.save();
+      await UserModel.findByIdAndUpdate(_id, {
+        fullName,
+      }).exec();
 
       res.status(200).send({
         data: {

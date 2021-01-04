@@ -14,4 +14,10 @@ function handleValidationErrors(errors: any[], res: Response) {
   });
 }
 
-export { handleHttpError, handleValidationErrors };
+function handleHttpSuccessResponse(data: any, res: Response, code: number) {
+  return res.status(code).send({
+    data,
+  });
+}
+
+export { handleHttpError, handleValidationErrors, handleHttpSuccessResponse };

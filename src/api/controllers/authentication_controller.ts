@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import express, { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import { ROLE } from '../../enum/enum';
 import IPayload from '../../interfaces/payload';
 import UserModel from '../../models/user';
 import { handleHttpError } from '../../utils/HttpResponseHandler';
@@ -62,12 +63,11 @@ router.post(
         fullName,
         password: hashedPassword,
       });
-
       await user.save();
 
-      const payload: IPayload = { role: user.role, _id: user._id };
-      const token = generateToken(payload);
-      const refreshToken = generateRefreshToken(payload);
+      const payload: IPayload = { role: ROLE.USER, _id: user._id };
+      const token: string = generateToken(payload);
+      const refreshToken: string = generateRefreshToken(payload);
 
       user.refreshToken = refreshToken;
       await user.save();
@@ -93,6 +93,13 @@ router.post('/refresh-token', refreshTokenValidation, (req, res) => {
     if (!user)
       return handleHttpError(new Error('non valid refresh token'), res, 404);
 
+    /**
+     *
+     * @description
+     * here you can add expiring date to your refresh token and validate it before you
+     * generate a refresh token
+     *
+     */
     const accessToken = generateToken({ _id: user._id, role: user.role });
 
     res.status(200).send({
@@ -113,11 +120,7 @@ router.post('/refresh-token', refreshTokenValidation, (req, res) => {
 router.get('/logout', authenticateUser, async (req: any, res: Response) => {
   try {
     const { _id } = req.user;
-
-    const user: any = await UserModel.findById(_id).exec();
-    user.refreshToken = null;
-    await user.save();
-
+    await UserModel.findByIdAndUpdate(_id, { refreshToken: null });
     res.status(200).send({
       data: {
         message: 'successfully logout',

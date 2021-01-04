@@ -7,8 +7,11 @@ const router = Router();
 router.get('/', async (req: Request, res: Response) => {
   try {
     const { page } = req.query;
-    const count = await UserModel.find({}).countDocuments();
-    const pages = Math.floor(count / pageElements);
+
+    const pages = Math.ceil(
+      (await UserModel.find({}).countDocuments()) / pageElements
+    );
+
     const users = await UserModel.find({})
       .select('-password')
       .limit(pageElements)
@@ -20,6 +23,7 @@ router.get('/', async (req: Request, res: Response) => {
         users,
         pages,
         pageElements,
+        page,
       },
     });
   } catch (error) {
