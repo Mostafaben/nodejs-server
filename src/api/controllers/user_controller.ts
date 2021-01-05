@@ -28,6 +28,12 @@ router.post('/profile-picture', async (req: Request | any, res: Response) => {
     const imageName = `user-${_id}${extName}`;
     const imagePath = path.join(__dirname, uploadPath + imageName);
 
+    /**
+     * @note
+     * no need to delete the old image if exist because the new one will
+     * remplace it
+     */
+
     fs.renameSync(image.path, imagePath);
     user.profileImage = {
       imageName,
