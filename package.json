@@ -1,13 +1,14 @@
 {
-  "name": "test",
+  "name": "nodejs-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "nodejs server (typescript) with mongodb configuration and some basic controllers",
   "main": "index.ts",
   "scripts": {
-    "dev": "nodemon index.ts"
+    "dev": "nodemon index.ts",
+    "start": "ts-node index.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mostafa Ben",
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

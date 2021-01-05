@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import express, { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { ROLE } from '../../enum/enum';
+import { ROLE, STATUS } from '../../enum/enum';
 import IPayload from '../../interfaces/payload';
 import UserModel from '../../models/user';
 import { handleHttpError } from '../../utils/HttpResponseHandler';
@@ -28,7 +28,16 @@ router.post('/login', loginValidation, async (req: Request, res: Response) => {
     const user: any = await UserModel.findOne({ email }).exec();
 
     if (!user || !bcrypt.compareSync(password, user.password))
-      handleHttpError(new Error('wrong email or password'), res, 404);
+      return handleHttpError(new Error('wrong email or password'), res, 404);
+
+    /**
+     *
+     * check if the user is blocked by the admin
+     *
+     */
+
+    if (user.status == STATUS.ARCHIVED)
+      return handleHttpError(new Error('user was not found'), res, 404);
 
     const payload: IPayload = { role: user.role, _id: user._id };
     const token = generateToken(payload);
